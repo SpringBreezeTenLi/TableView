@@ -1,14 +1,13 @@
-plugins {
-    id 'com.android.application'
-}
+apply plugin: 'com.android.application'
 
 android {
-    compileSdk 32
+    compileSdkVersion 29
+
 
     defaultConfig {
         applicationId "com.huading.tableview"
-        minSdk 19
-        targetSdk 32
+        minSdkVersion 19
+        targetSdkVersion 29
         versionCode 1
         versionName "1.0"
 
@@ -22,8 +21,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
@@ -32,6 +31,7 @@ dependencies {
     implementation 'com.android.support:appcompat-v7:25.0.0'
     //noinspection GradleCompatible
     implementation 'com.android.support:recyclerview-v7:25.0.0'
+    //noinspection GradleCompatible
     implementation 'com.android.support:design:25.0.0'
     testImplementation 'junit:junit:4.12'
 }
