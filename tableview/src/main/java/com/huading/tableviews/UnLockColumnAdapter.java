@@ -274,7 +274,7 @@ public class UnLockColumnAdapter extends RecyclerView.Adapter<UnLockColumnAdapte
                         ViewGroup.LayoutParams.MATCH_PARENT);
                 splitView.setLayoutParams(splitViewParmas);
                 if (isFristRow) {
-                    splitView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.white));
+                    splitView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.light_gray));
                 } else {
                     splitView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.light_gray));
                 }
