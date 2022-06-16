@@ -1,4 +1,4 @@
-package com.huading.tableview.table;
+package com.huading.tableviews;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
@@ -17,9 +17,6 @@ import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.huading.tableview.R;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

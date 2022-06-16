@@ -1,4 +1,4 @@
-package com.huading.tableview.table;
+package com.huading.tableviews;
 
 import android.content.Context;
 

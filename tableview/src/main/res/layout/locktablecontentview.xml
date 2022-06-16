@@ -16,7 +16,7 @@
         android:layout_height="match_parent"
         android:background="@color/light_gray" />
 
-    <com.huading.tableview.table.CustomHorizontalScrollView
+    <com.huading.tableviews.CustomHorizontalScrollView
         android:scrollbars="none"
         android:id="@+id/lockScrollView_parent"
         android:layout_width="match_parent"
@@ -29,5 +29,5 @@
 
         </android.support.v7.widget.RecyclerView>
 
-    </com.huading.tableview.table.CustomHorizontalScrollView>
+    </com.huading.tableviews.CustomHorizontalScrollView>
 </LinearLayout>

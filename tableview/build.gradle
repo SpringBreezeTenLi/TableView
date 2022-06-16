@@ -1,11 +1,9 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 29
 
-
     defaultConfig {
-        applicationId "com.huading.tableview"
         minSdkVersion 19
         targetSdkVersion 29
         versionCode 1
@@ -27,8 +25,12 @@ android {
 }
 
 dependencies {
+
     //noinspection GradleCompatible
     implementation 'com.android.support:appcompat-v7:25.0.0'
-
-    implementation project(path: ':tableview')
+    //noinspection GradleCompatible
+    implementation 'com.android.support:recyclerview-v7:25.0.0'
+    //noinspection GradleCompatible
+    implementation 'com.android.support:design:25.0.0'
+    testImplementation 'junit:junit:4.12'
 }

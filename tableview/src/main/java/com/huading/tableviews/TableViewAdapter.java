@@ -1,4 +1,4 @@
-package com.huading.tableview.table;
+package com.huading.tableviews;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -10,9 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
-
-import com.huading.tableview.R;
-
 import java.util.ArrayList;
 
 public class TableViewAdapter extends RecyclerView.Adapter<TableViewAdapter.TableViewHolder> {
