@@ -17,6 +17,7 @@ import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -83,6 +84,10 @@ public class LockTableView {
      */
     private int mTableContentTextColor;
     /**
+     * 头部点击事件
+     */
+    private OnHeaderViewClickListener mHeaderClickListener;
+    /**
      * 表格横向滚动监听事件
      */
     private OnTableViewListener mTableViewListener;
@@ -112,8 +117,16 @@ public class LockTableView {
      */
     private HashMap<Integer, Integer> mChangeColumns = new HashMap<>();
 
+    /**
+     * 设置头部数据背景颜色
+     */
+    private int mTableHeaderBgColor;
 
     //表格数据
+    /**
+     * 头部数据
+     */
+    private ArrayList<HeaderBean> mHeaderDatas;
     /**
      * 表格第一行数据,不包括第一个元素
      */
@@ -158,6 +171,10 @@ public class LockTableView {
      */
     private LinearLayout mUnLockHeadView;
     /**
+     * 新头部布局
+     */
+    private CustomHorizontalScrollView mHeadScrollView;
+    /**
      * 第一行滚动视图（锁状态）
      */
     private CustomHorizontalScrollView mLockScrollView;
@@ -179,11 +196,13 @@ public class LockTableView {
      *
      * @param mContext     上下文
      * @param mContentView 表格父视图
+     * @param headerBeans  头部数据
      * @param mTableDatas  表格数据
      */
-    public LockTableView(Context mContext, ViewGroup mContentView, ArrayList<ArrayList<String>> mTableDatas) {
+    public LockTableView(Context mContext, ViewGroup mContentView, ArrayList<HeaderBean> headerBeans, ArrayList<ArrayList<String>> mTableDatas) {
         this.mContext = mContext;
         this.mContentView = mContentView;
+        this.mHeaderDatas = headerBeans;
         this.mTableDatas = mTableDatas;
         initAttrs();
     }
@@ -201,6 +220,7 @@ public class LockTableView {
         mTableHeadTextColor = R.color.beijin;
         mTableContentTextColor = R.color.border_color;
         mFristRowBackGroudColor = R.color.table_head;
+        mTableHeaderBgColor = R.color.beijin;
         mTextViewSize = 16;
         mCellPadding = DisplayUtil.dip2px(mContext, 45);
     }
@@ -356,6 +376,7 @@ public class LockTableView {
         mColumnTitleView = (TextView) mTableView.findViewById(R.id.lockHeadView_Text);
         mLockHeadView = (LinearLayout) mTableView.findViewById(R.id.lockHeadView);
         mUnLockHeadView = (LinearLayout) mTableView.findViewById(R.id.unLockHeadView);
+        mHeadScrollView = (CustomHorizontalScrollView) mTableView.findViewById(R.id.header_ScrollView);
         mLockScrollView = (CustomHorizontalScrollView) mTableView.findViewById(R.id.lockHeadView_ScrollView);
         mUnLockScrollView = (CustomHorizontalScrollView) mTableView.findViewById(R.id.unlockHeadView_ScrollView);
         //表格主视图
@@ -426,6 +447,32 @@ public class LockTableView {
             mLockHeadView.setVisibility(View.GONE);
             mUnLockHeadView.setVisibility(View.GONE);
         }
+        createHeaderView();
+    }
+
+    private void createHeaderView() {
+        createHeadScollView(mHeadScrollView, mHeaderDatas);
+        mScrollViews.add(mHeadScrollView);
+        mHeadScrollView.setOnScrollChangeListener(new CustomHorizontalScrollView.onScrollChangeListener() {
+            @Override
+            public void onScrollChanged(HorizontalScrollView scrollView, int x, int y) {
+                changeAllScrollView(x, y);
+            }
+
+            @Override
+            public void onScrollFarLeft(HorizontalScrollView scrollView) {
+                if (mTableViewRangeListener != null) {
+                    mTableViewRangeListener.onLeft(scrollView);
+                }
+            }
+
+            @Override
+            public void onScrollFarRight(HorizontalScrollView scrollView) {
+                if (mTableViewRangeListener != null) {
+                    mTableViewRangeListener.onRight(scrollView);
+                }
+            }
+        });
     }
 
     /**
@@ -607,6 +654,95 @@ public class LockTableView {
         return 0;
     }
 
+    private void createHeadScollView(HorizontalScrollView scrollView, List<HeaderBean> datas) {
+        if (scrollView.getChildCount() > 0) {
+            scrollView.removeAllViews();
+        }
+        LinearLayout linearLayout = new LinearLayout(mContext);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        linearLayout.setLayoutParams(layoutParams);
+        linearLayout.setBackgroundColor(mTableHeaderBgColor);
+        linearLayout.setGravity(Gravity.CENTER);
+        linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+        for (int i = 0; i < datas.size(); i++) {
+            final int position = i;
+            HeaderBean bean = datas.get(i);
+            if (bean.isDrawable()) {
+                //构造单元格
+                TextDrawable textView = new TextDrawable(mContext);
+                textView.setTextColor(ContextCompat.getColor(mContext, mTableContentTextColor));
+                textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, mTextViewSize);
+                textView.setGravity(Gravity.CENTER);
+                textView.setText(datas.get(i).getTip());
+                switch (bean.getClickCount()) {
+                    case 0: {
+                        textView.setDrawableRight(R.drawable.table_noon);
+                        break;
+                    }
+                    case 1: {
+                        textView.setDrawableRight(R.drawable.table_up);
+                        break;
+                    }
+                    case 2: {
+                        textView.setDrawableRight(R.drawable.table_down);
+                        break;
+                    }
+                }
+                textView.setDrawableRightSize(15, 20);
+                //设置布局
+                LinearLayout.LayoutParams textViewParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT);
+                textViewParams.setMargins(mCellPadding, mCellPadding, mCellPadding, mCellPadding);
+                textViewParams.height = DisplayUtil.dip2px(mContext, minRowHeight);
+                textView.setLayoutParams(textViewParams);
+                textView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (mHeaderClickListener != null) {
+                            mHeaderClickListener.onItemHeaderClicked(position);
+                        }
+                    }
+                });
+                ViewGroup.LayoutParams textViewParamsCopy = textView.getLayoutParams();
+                if (isLockFristColumn) {
+                    textViewParamsCopy.width = DisplayUtil.dip2px(mContext, mColumnMaxWidths.get(i + 1));
+                } else {
+                    textViewParamsCopy.width = DisplayUtil.dip2px(mContext, mColumnMaxWidths.get(i));
+                }
+                linearLayout.addView(textView);
+            } else {
+                //构造单元格
+                TextView textView = new TextView(mContext);
+                textView.setTextColor(ContextCompat.getColor(mContext, mTableContentTextColor));
+                textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, mTextViewSize);
+                textView.setGravity(Gravity.CENTER);
+                textView.setText(datas.get(i).getTip());
+                //设置布局
+                LinearLayout.LayoutParams textViewParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT);
+                textViewParams.setMargins(mCellPadding, mCellPadding, mCellPadding, mCellPadding);
+                textView.setLayoutParams(textViewParams);
+                ViewGroup.LayoutParams textViewParamsCopy = textView.getLayoutParams();
+                if (isLockFristColumn) {
+                    textViewParamsCopy.width = DisplayUtil.dip2px(mContext, mColumnMaxWidths.get(i + 1));
+                } else {
+                    textViewParamsCopy.width = DisplayUtil.dip2px(mContext, mColumnMaxWidths.get(i));
+                }
+                linearLayout.addView(textView);
+            }
+            //画分隔线
+            if (i != datas.size() - 1) {
+                View splitView = new View(mContext);
+                ViewGroup.LayoutParams splitViewParmas = new ViewGroup.LayoutParams(DisplayUtil.dip2px(mContext, 1),
+                        ViewGroup.LayoutParams.MATCH_PARENT);
+                splitView.setLayoutParams(splitViewParmas);
+                splitView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.light_gray));
+                linearLayout.addView(splitView);
+            }
+        }
+        scrollView.addView(linearLayout);
+    }
 
     /**
      * 构造滚动视图
@@ -723,6 +859,11 @@ public class LockTableView {
         return this;
     }
 
+    public LockTableView setHeaderBgColor(int mHeaderBgColor) {
+        this.mTableHeaderBgColor = mHeaderBgColor;
+        return this;
+    }
+
     public LockTableView setTableContentTextColor(int mTableContentTextColor) {
         this.mTableContentTextColor = mTableContentTextColor;
         return this;
@@ -735,6 +876,11 @@ public class LockTableView {
 
     public LockTableView setMinRowHeight(int minRowHeight) {
         this.minRowHeight = minRowHeight;
+        return this;
+    }
+
+    public LockTableView setHeaderViewClickListener(OnHeaderViewClickListener onHeaderViewClickListener) {
+        this.mHeaderClickListener = onHeaderViewClickListener;
         return this;
     }
 
@@ -810,13 +956,11 @@ public class LockTableView {
     }
 
     /**
-     * 说明 数据刷新时，重新设值
-     * 作者 郭翰林
-     * 创建时间 2017/9/17 下午2:33
-     *
+     * @param headerBeans
      * @param mTableDatas
      */
-    public void setTableDatas(ArrayList<ArrayList<String>> mTableDatas) {
+    public void setTableDatas(ArrayList<HeaderBean> headerBeans, ArrayList<ArrayList<String>> mTableDatas) {
+        this.mHeaderDatas = headerBeans;
         this.mTableDatas = mTableDatas;
         mTableFristData.clear();
         mTableColumnDatas.clear();
@@ -824,9 +968,13 @@ public class LockTableView {
         mColumnMaxWidths.clear();
         mRowMaxHeights.clear();
         initData();
+        createHeadScollView(mHeadScrollView, mHeaderDatas);
         mTableViewAdapter.notifyDataSetChanged();
     }
 
+    public interface OnHeaderViewClickListener {
+        void onItemHeaderClicked(int position);
+    }
 
     /**
      * 横向滚动监听
@@ -848,19 +996,11 @@ public class LockTableView {
     public interface OnTableViewRangeListener {
 
         /**
-         * 说明 最左侧
-         * 作者 郭翰林
-         * 创建时间 2017/12/14 下午4:45
-         *
          * @param view
          */
         void onLeft(HorizontalScrollView view);
 
         /**
-         * 说明 最右侧
-         * 作者 郭翰林
-         * 创建时间 2017/12/14 下午4:45
-         *
          * @param view
          */
         void onRight(HorizontalScrollView view);

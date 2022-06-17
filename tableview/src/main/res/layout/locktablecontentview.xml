@@ -17,10 +17,10 @@
         android:background="@color/light_gray" />
 
     <com.huading.tableviews.CustomHorizontalScrollView
-        android:scrollbars="none"
         android:id="@+id/lockScrollView_parent"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:scrollbars="none">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/main_recyclerview"
@@ -30,4 +30,5 @@
         </android.support.v7.widget.RecyclerView>
 
     </com.huading.tableviews.CustomHorizontalScrollView>
+
 </LinearLayout>

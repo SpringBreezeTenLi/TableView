@@ -106,7 +106,7 @@ public class UnLockColumnAdapter extends RecyclerView.Adapter<UnLockColumnAdapte
             createRowView(holder.mLinearLayout, datas, false, mRowMaxHeights.get(position + 1));
         } else {
             if (position == 0) {
-                holder.mLinearLayout.setBackgroundColor(ContextCompat.getColor(mContext, mFristRowBackGroudColor));
+//                holder.mLinearLayout.setBackgroundColor(ContextCompat.getColor(mContext, mFristRowBackGroudColor));
                 createRowView(holder.mLinearLayout, datas, true, mRowMaxHeights.get(position));
             } else {
                 createRowView(holder.mLinearLayout, datas, false, mRowMaxHeights.get(position));

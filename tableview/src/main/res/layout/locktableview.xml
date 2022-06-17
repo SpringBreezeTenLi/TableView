@@ -6,6 +6,31 @@
     android:orientation="vertical">
 
     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/light_gray" />
+
+        <com.huading.tableviews.CustomHorizontalScrollView
+            android:id="@+id/header_ScrollView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none">
+
+        </com.huading.tableviews.CustomHorizontalScrollView>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/light_gray" />
+
+    <LinearLayout
         android:id="@+id/lockHeadView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
