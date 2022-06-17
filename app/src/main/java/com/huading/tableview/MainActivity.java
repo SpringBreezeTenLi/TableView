@@ -2,6 +2,7 @@ package com.huading.tableview;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.widget.LinearLayout;
 
 import com.huading.tableviews.LockTableView;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
+    private RecyclerView recyclerView;
     private LinearLayout linearLayout;
 
     @Override
@@ -17,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        recyclerView = (RecyclerView) findViewById(R.id.recycler);
         linearLayout = (LinearLayout) findViewById(R.id.linear);
 
         ArrayList<ArrayList<String>> lists = new ArrayList<>();
@@ -40,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
             lists.add(strings);
         }
 
-        LockTableView tableView = new LockTableView(this, linearLayout, lists);
+        LockTableView tableView = new LockTableView(this,linearLayout, lists);
         tableView.setLockFristRow(true)
                 .setLockFristColumn(false)
                 .setMaxColumnWidth(100)

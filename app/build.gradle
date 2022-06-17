@@ -29,6 +29,7 @@ android {
 dependencies {
     //noinspection GradleCompatible
     implementation 'com.android.support:appcompat-v7:25.0.0'
-
+    //noinspection GradleCompatible
+    implementation 'com.android.support:recyclerview-v7:25.0.0'
     implementation project(path: ':tableview')
 }

@@ -174,7 +174,6 @@ public class LockTableView {
      */
     private TableViewAdapter mTableViewAdapter;
 
-
     /**
      * 构造方法
      *
@@ -194,10 +193,10 @@ public class LockTableView {
      */
     private void initAttrs() {
         mTableView = LayoutInflater.from(mContext).inflate(R.layout.locktableview, null);
-        maxColumnWidth = 100;
-        minColumnWidth = 70;
-        minRowHeight = 20;
-        maxRowHeight = 60;
+        maxColumnWidth = 80;
+        minColumnWidth = 80;
+        minRowHeight = 45;
+        maxRowHeight = 45;
         mNullableString = "N/A";
         mTableHeadTextColor = R.color.beijin;
         mTableContentTextColor = R.color.border_color;
